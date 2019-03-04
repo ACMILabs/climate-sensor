@@ -36,6 +36,6 @@ while True:
         response = requests.post(XOS_CLIMATE_STATUS_ENDPOINT, json=data)
         response.raise_for_status()
     except (requests.exceptions.HTTPError, requests.exceptions.ConnectionError) as e:
-        print(f'Failed to connect to {XOS_CLIMATE_STATUS_ENDPOINT} with error: {e.response}')
+        print(f'Failed to connect to {XOS_CLIMATE_STATUS_ENDPOINT} with error: {e}')
 
     time.sleep(int(TIME_BETWEEN_READINGS))
