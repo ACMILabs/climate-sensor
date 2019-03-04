@@ -6,8 +6,6 @@ FROM balenalib/%%BALENA_MACHINE_NAME%%-python:3-stretch-run
 # for instance if you need git, just uncomment the line below.
 RUN install_packages build-essential python-dev python-openssl git
 
-RUN git clone https://github.com/adafruit/Adafruit_Python_DHT.git && cd Adafruit_Python_DHT && python setup.py install
-
 ENV PYTHONUNBUFFERED 1
 
 COPY ./requirements.txt /code/requirements.txt
@@ -15,6 +13,9 @@ RUN pip install -Ur /code/requirements.txt
 
 COPY . /code/
 WORKDIR /code/
+
+RUN git clone https://github.com/adafruit/Adafruit_Python_DHT.git
+RUN python /code/Adafruit_Python_DHT/setup.py install
 
 # main.py will run when container starts up on the device
 CMD ["bash","scripts/pi.sh"]

@@ -33,4 +33,4 @@ while True:
     }
     response = requests.post(XOS_CLIMATE_STATUS_ENDPOINT, json=data)
 
-    time.sleep(60*5)
+    time.sleep(5)
