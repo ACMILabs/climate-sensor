@@ -15,7 +15,7 @@ def datetime_now():
     pytz_timezone = pytz.timezone('Australia/Melbourne')
     return datetime.now(pytz_timezone).isoformat()
 
-sensor = Adafruit_DHT.DHT11
+sensor = Adafruit_DHT.DHT22
 pin = 4
 
 while True:
