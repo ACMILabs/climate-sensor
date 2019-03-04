@@ -9,6 +9,7 @@ import requests
 LOCATION_NAME = os.getenv('LOCATION_NAME')
 LOCATION_DESCRIPTION = os.getenv('LOCATION_DESCRIPTION')
 XOS_CLIMATE_STATUS_ENDPOINT = os.getenv('XOS_CLIMATE_STATUS_ENDPOINT')
+TIME_BETWEEN_READINGS = os.getenv('TIME_BETWEEN_READINGS')
 
 
 def datetime_now():
@@ -33,4 +34,4 @@ while True:
     }
     response = requests.post(XOS_CLIMATE_STATUS_ENDPOINT, json=data)
 
-    time.sleep(5)
+    time.sleep(int(TIME_BETWEEN_READINGS))
