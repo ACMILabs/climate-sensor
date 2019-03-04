@@ -6,6 +6,8 @@ FROM balenalib/%%BALENA_MACHINE_NAME%%-python:3-stretch-run
 # for instance if you need git, just uncomment the line below.
 RUN install_packages build-essential python-dev python-openssl git
 
+RUN git clone https://github.com/adafruit/Adafruit_Python_DHT.git && cd Adafruit_Python_DHT && python setup.py install
+
 ENV PYTHONUNBUFFERED 1
 
 COPY ./requirements.txt /code/requirements.txt

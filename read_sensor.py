@@ -20,7 +20,6 @@ pin = 4
 
 while True:
     humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
-    print('%s°C %sRH' % (temperature, humidity))
 
     # POST to XOS
     data = {
@@ -34,4 +33,4 @@ while True:
     }
     response = requests.post(XOS_CLIMATE_STATUS_ENDPOINT, json=data)
 
-    time.sleep(3)
+    time.sleep(60*5)
