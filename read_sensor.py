@@ -30,7 +30,7 @@ while True:
         },
         'temperature': temperature,
         'humidity': humidity,
-        'tap_datetime': datetime_now()  # ISO8601 format
+        'status_datetime': datetime_now()  # ISO8601 format
     }
     response = requests.post(XOS_CLIMATE_STATUS_ENDPOINT, json=data)
 
