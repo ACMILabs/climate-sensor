@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python read_sensor.py
+python ../read_sensor.py
