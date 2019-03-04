@@ -20,7 +20,7 @@ pin = 4
 
 while True:
     humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
-    print(f'{temperature}°C {humidity}%')
+    print('%s°C %sRH' % (temperature, humidity))
 
     # POST to XOS
     data = {
