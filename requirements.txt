@@ -1,5 +1,4 @@
 pytz
 requests
 adafruit-circuitpython-htu21d
-board
 RPI.GPIO
