@@ -2,4 +2,4 @@ pytz
 requests
 adafruit-circuitpython-htu21d
 board
-busio
+RPI.GPIO
