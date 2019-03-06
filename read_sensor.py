@@ -1,7 +1,9 @@
 import os, time
 from datetime import datetime
 
-import Adafruit_DHT
+import board
+import busio
+from adafruit_htu21d import HTU21D
 import pytz
 import requests
 
@@ -16,20 +18,18 @@ def datetime_now():
     pytz_timezone = pytz.timezone('Australia/Melbourne')
     return datetime.now(pytz_timezone).isoformat()
 
-sensor = Adafruit_DHT.DHT22
-pin = 4
+i2c = busio.I2C(board.SCL, board.SDA)
+sensor = HTU21D(i2c)
 
 while True:
-    humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
-
     # POST to XOS
     data = {
         'location': {
             'name': LOCATION_NAME,
             'description': LOCATION_DESCRIPTION
         },
-        'temperature': temperature,
-        'humidity': humidity,
+        'temperature': sensor.temperature,
+        'humidity': sensor.relative_humidity,
         'status_datetime': datetime_now()  # ISO8601 format
     }
     try:
