@@ -2,3 +2,4 @@ pytz
 requests
 adafruit-circuitpython-htu21d
 RPI.GPIO
+prometheus_client
