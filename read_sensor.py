@@ -1,11 +1,15 @@
-import os, time
+import os
+import time
 from datetime import datetime
 
 import board
-import busio
-from adafruit_htu21d import HTU21D
 import pytz
 import requests
+
+import busio
+from adafruit_htu21d import HTU21D
+from prometheus_client import Gauge, start_http_server
+
 
 # Constants
 LOCATION_NAME = os.getenv('LOCATION_NAME')
@@ -20,22 +24,13 @@ def datetime_now():
 
 i2c = busio.I2C(board.SCL, board.SDA)
 sensor = HTU21D(i2c)
+temperature_gauge = Gauge('ambient_temperature', 'Ambient temperature')
+humidity_gauge = Gauge('ambient_humidity', 'Ambient humidity')
 
-while True:
-    # POST to XOS
-    data = {
-        'location': {
-            'name': LOCATION_NAME,
-            'description': LOCATION_DESCRIPTION
-        },
-        'temperature': sensor.temperature,
-        'humidity': sensor.relative_humidity,
-        'status_datetime': datetime_now()  # ISO8601 format
-    }
-    try:
-        response = requests.post(XOS_CLIMATE_STATUS_ENDPOINT, json=data)
-        response.raise_for_status()
-    except (requests.exceptions.HTTPError, requests.exceptions.ConnectionError) as e:
-        print('Failed to connect to %s with error: %s' % (XOS_CLIMATE_STATUS_ENDPOINT, e))
+if __name__ == '__main__':
+    start_http_server(1006)
+    while True:
+        temperature_gauge.set(sensor.temperature)
+        humidity_gauge.set(sensor.relative_humidity)
 
-    time.sleep(int(TIME_BETWEEN_READINGS))
+        time.sleep(int(TIME_BETWEEN_READINGS))
