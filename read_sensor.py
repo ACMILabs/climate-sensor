@@ -4,6 +4,8 @@ from datetime import datetime
 import Adafruit_DHT
 import pytz
 import requests
+from prometheus_client import Gauge, start_http_server
+
 
 # Constants
 LOCATION_NAME = os.getenv('LOCATION_NAME')
@@ -18,24 +20,14 @@ def datetime_now():
 
 sensor = Adafruit_DHT.DHT22
 pin = 4
+temperature_gauge = Gauge('ambient_temperature', 'Ambient temperature')
+humidity_gauge = Gauge('ambient_humidity', 'Ambient humidity')
 
-while True:
-    humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
+if __name__ == '__main__':
+    start_http_server(1006)
+    while True:
+        humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
+        temperature_gauge.set(temperature)
+        humidity_gauge.set(humidity)
 
-    # POST to XOS
-    data = {
-        'location': {
-            'name': LOCATION_NAME,
-            'description': LOCATION_DESCRIPTION
-        },
-        'temperature': temperature,
-        'humidity': humidity,
-        'status_datetime': datetime_now()  # ISO8601 format
-    }
-    try:
-        response = requests.post(XOS_CLIMATE_STATUS_ENDPOINT, json=data)
-        response.raise_for_status()
-    except (requests.exceptions.HTTPError, requests.exceptions.ConnectionError) as e:
-        print('Failed to connect to %s with error: %s' % (XOS_CLIMATE_STATUS_ENDPOINT, e))
-
-    time.sleep(int(TIME_BETWEEN_READINGS))
+        time.sleep(int(TIME_BETWEEN_READINGS))
