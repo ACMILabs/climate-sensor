@@ -31,6 +31,9 @@ if __name__ == '__main__':
     while True:
         humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
 
+        if humidity < 0 or humidity > 100:
+            continue
+
         temperatures.appendleft(temperature)
         humidities.appendleft(humidity)
         tmp_temperature = temperature
