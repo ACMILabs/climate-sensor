@@ -1,4 +1,5 @@
 config-balena.env
 .vscode
 .DS_Store
+dev.env
 

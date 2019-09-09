@@ -29,7 +29,15 @@ humidity_gauge = Gauge('ambient_humidity', 'Ambient humidity')
 if __name__ == '__main__':
     start_http_server(1006)
     while True:
-        humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
+        try:
+            humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
+        except RuntimeError as exception:
+            template = 'An exception of type {0} occurred. Arguments:\n{1!r}'
+            message = template.format(type(exception).__name__, exception.args)
+            print(message)
+            # Default to one
+            humidity = 1
+            temperature = 1
 
         if humidity < 0 or humidity > 100:
             continue

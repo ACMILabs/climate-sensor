@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  climate:
+    build:
+      context: "../"
+      dockerfile: development/Dockerfile
+      args:
+        IS_LOCAL_ENV: "true"
+    hostname: climate
+    container_name: climate
+    env_file: ../dev.env
+    privileged: true
+    volumes:
+      - ../:/code
+    tty: true
+    ports:
+     - 1006:1006
