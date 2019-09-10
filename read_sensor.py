@@ -35,8 +35,9 @@ if __name__ == '__main__':
         except RuntimeError as exception:
             TEMPLATE = 'An exception of type {0} occurred. Arguments:\n{1!r}'
             MESSAGE = TEMPLATE.format(type(exception).__name__, exception.args)
-            print(MESSAGE)
-            # Default to one
+            # print(MESSAGE)
+
+            # Set default values for tests
             HUMIDITY = 1
             TEMPERATURE = 1
 
