@@ -15,7 +15,7 @@ def test_read_sensor():
 
 def test_datetime_now():
     """
-    Test that the datetime_now function returns a string with a timezone.
+    Test that the datetime_now function returns an iso 8601 datetime with a timezone.
     """
 
     datetime = read_sensor.datetime_now()
