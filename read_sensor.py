@@ -28,7 +28,7 @@ if __name__ == '__main__':
     while True:
         try:
             HUMIDITY, TEMPERATURE = Adafruit_DHT.read_retry(SENSOR, PIN)
-        except RuntimeError as exception:
+        except (ImportError, RuntimeError) as exception:
             TEMPLATE = 'An exception of type {0} occurred. Arguments:\n{1!r}'
             MESSAGE = TEMPLATE.format(type(exception).__name__, exception.args)
             # print(MESSAGE)
