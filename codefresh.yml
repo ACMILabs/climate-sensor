@@ -10,8 +10,6 @@ steps:
     repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
     revision: '${{CF_REVISION}}'
     stage: checkout
-    environment: &my_common_envs
-      - IS_LOCAL_ENV=true
   climate_image:
     title: Building Docker Image
     type: build
@@ -20,6 +18,8 @@ steps:
     working_directory: ./
     tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
     dockerfile: ./development/Dockerfile
+    commands:
+      - export IS_LOCAL_ENV=true
   unit_test:
     title: Running Unit tests
     image: '${{climate_image}}'
