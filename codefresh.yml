@@ -18,8 +18,6 @@ steps:
     working_directory: ./
     tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
     dockerfile: ./development/Dockerfile
-    commands:
-      - export IS_LOCAL_ENV=true
   unit_test:
     title: Running Unit tests
     image: '${{climate_image}}'

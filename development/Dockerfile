@@ -11,10 +11,7 @@ ENV PYTHONUNBUFFERED 1
 COPY ./requirements.txt /code/requirements.txt
 COPY ./dev.txt /code/dev.txt
 RUN pip install -Ur /code/requirements.txt
-ARG IS_LOCAL_ENV
-RUN if [ "$IS_LOCAL_ENV" = "true" ]; \
-    then pip install -Ur /code/dev.txt; \
-    fi
+RUN pip install -Ur /code/dev.txt
 COPY . /code/
 WORKDIR /code/
 
