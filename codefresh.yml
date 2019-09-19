@@ -15,6 +15,8 @@ steps:
     type: build
     stage: package
     image_name: climate
+    environment: &my_common_envs
+      - IS_LOCAL_ENV=true
     working_directory: ./
     tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
     dockerfile: ./development/Dockerfile
