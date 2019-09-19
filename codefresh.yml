@@ -15,9 +15,9 @@ steps:
     type: build
     stage: package
     image_name: climate
-    working_directory: ./development
-    tag: v1.0.0
-    dockerfile: Dockerfile
+    working_directory: ./
+    tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
+    dockerfile: ./development/Dockerfile
   unit_test:
     title: Running Unit tests
     image: '${{climate_image}}'
