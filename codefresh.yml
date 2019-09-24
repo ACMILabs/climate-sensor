@@ -24,3 +24,13 @@ steps:
     stage: test 
     commands:
       - make linttest
+  deploy_to_Balena:
+    title: Deploying repository to Balena
+    image: acmilabs/balena-cli
+    commands:
+      - ./add-key.sh github.com $GITHUB_FINGERPRINT
+      - eval `ssh-agent`; ssh-add - <<< "${SSH_KEY}"
+      - git clone git@github.com:ACMILabs/temperature-humidity-prototype.git
+      - cd temperature-humidity-prototype
+      - balena login --token $BALENA_TOKEN
+      - balena push e__climate_ci_test
