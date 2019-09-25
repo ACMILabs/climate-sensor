@@ -29,8 +29,7 @@ steps:
     image: acmilabs/balena-cli
     commands:
       - ./add-key.sh github.com $GITHUB_FINGERPRINT
-      - eval `ssh-agent`; ssh-add - <<< "${SSH_KEY}"
-      - git clone git@github.com:ACMILabs/temperature-humidity-prototype.git
-      - cd temperature-humidity-prototype
+      - ssh-agent bash -c 'ssh-add - <<< "${SSH_KEY}"; git clone git@github.com:${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}.git'
+      - cd ${{CF_REPO_NAME}}
       - balena login --token $BALENA_TOKEN
       - balena push e__climate_ci_test
