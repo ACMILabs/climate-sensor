@@ -27,7 +27,7 @@ steps:
       - make linttest
   deploy_to_Balena:
     title: Deploying repository to Balena
-    image: acmilabs/balena-cli:test-2
+    image: acmilabs/balena-cli:test-3
     stage: deploy
     commands:
       - echo hello
