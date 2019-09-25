@@ -28,7 +28,6 @@ steps:
     title: Deploying repository to Balena
     image: acmilabs/balena-cli
     commands:
-      - bash /code/add-key.sh github.com $GITHUB_FINGERPRINT
       - ssh-agent bash -c 'ssh-add - <<< "${SSH_KEY}"; git clone git@github.com:${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}.git'
       - cd ${{CF_REPO_NAME}}
       - balena login --token $BALENA_TOKEN
