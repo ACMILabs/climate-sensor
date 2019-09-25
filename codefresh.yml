@@ -2,7 +2,8 @@ version: '1.0'
 stages:
   - checkout
   - package
-  - test  
+  - test
+  - deploy
 steps:
   main_clone:
     title: Cloning main repository...
@@ -27,8 +28,6 @@ steps:
   deploy_to_Balena:
     title: Deploying repository to Balena
     image: acmilabs/balena-cli
+    stage: deploy
     commands:
-      - ssh-agent bash -c 'ssh-add - <<< "${SSH_KEY}"; git clone git@github.com:${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}.git'
-      - cd ${{CF_REPO_NAME}}
-      - balena login --token $BALENA_TOKEN
-      - balena push e__climate_ci_test
+      - echo hello
