@@ -31,3 +31,4 @@ steps:
     stage: deploy
     commands:
       - echo hello
+      - bash /code/add-key.sh github.com $GITHUB_FINGERPRINT
