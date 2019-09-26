@@ -27,7 +27,7 @@ steps:
       - make linttest
   deploy_to_Balena:
     title: Deploying repository to Balena
-    image: acmilabs/balena-cli:latest
+    image: balenalib/raspberrypi3-python:3-stretch-run
     stage: deploy
     commands:
       - echo hello
