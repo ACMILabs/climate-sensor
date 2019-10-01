@@ -20,5 +20,5 @@ WORKDIR /code/Adafruit_Python_DHT/
 RUN python setup.py install --force-pi
 WORKDIR /code/
 
-# pi.py will run when container starts up on the device
+# pi.sh will run when container starts up on the device
 CMD ["bash","scripts/pi.sh"]
