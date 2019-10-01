@@ -17,7 +17,7 @@ WORKDIR /code/
 
 RUN git clone https://github.com/adafruit/Adafruit_Python_DHT.git
 WORKDIR /code/Adafruit_Python_DHT/
-RUN python setup.py install --force-pi
+RUN python setup.py install --force-pi2
 WORKDIR /code/
 
 # pi.sh will run when container starts up on the device
