@@ -1,4 +1,11 @@
 config-balena.env
 .vscode
 .DS_Store
+dev.env
 
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache
+tests/__pycache__/

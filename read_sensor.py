@@ -1,67 +1,73 @@
-import os, time
+import os
+import time
 from collections import deque
 from datetime import datetime
 
 import Adafruit_DHT
 import pytz
-import requests
 from prometheus_client import Gauge, start_http_server
 
-
-# Constants
-LOCATION_NAME = os.getenv('LOCATION_NAME')
-LOCATION_DESCRIPTION = os.getenv('LOCATION_DESCRIPTION')
-XOS_CLIMATE_STATUS_ENDPOINT = os.getenv('XOS_CLIMATE_STATUS_ENDPOINT')
 TIME_BETWEEN_READINGS = os.getenv('TIME_BETWEEN_READINGS')
+TIMEZONE = os.getenv('TIMEZONE', 'Australia/Melbourne')
+TEMPERATURES = deque()
+HUMIDITIES = deque()
 
-temperatures = deque()
-humidities = deque()
 
 def datetime_now():
-    pytz_timezone = pytz.timezone('Australia/Melbourne')
+    pytz_timezone = pytz.timezone(TIMEZONE)
     return datetime.now(pytz_timezone).isoformat()
 
-sensor = Adafruit_DHT.DHT22
-pin = 4
-temperature_gauge = Gauge('ambient_temperature', 'Ambient temperature')
-humidity_gauge = Gauge('ambient_humidity', 'Ambient humidity')
+
+SENSOR = Adafruit_DHT.DHT22
+PIN = 4
+TEMPERATURE_GAUGE = Gauge('ambient_temperature', 'Ambient temperature')
+HUMIDITY_GAUGE = Gauge('ambient_humidity', 'Ambient humidity')
 
 if __name__ == '__main__':
     start_http_server(1006)
     while True:
-        humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
+        try:
+            HUMIDITY, TEMPERATURE = Adafruit_DHT.read_retry(SENSOR, PIN)
+        except (ImportError, RuntimeError) as exception:
+            TEMPLATE = 'An exception of type {0} occurred. Arguments:\n{1!r}'
+            MESSAGE = TEMPLATE.format(type(exception).__name__, exception.args)
+            # print(MESSAGE)
 
-        if humidity < 0 or humidity > 100:
+            # Set default values for tests
+            HUMIDITY = 1
+            TEMPERATURE = 1
+
+        if HUMIDITY < 0 or HUMIDITY > 100:
             continue
 
-        temperatures.appendleft(temperature)
-        humidities.appendleft(humidity)
-        tmp_temperature = temperature
-        tmp_humidity = humidity
+        TEMPERATURES.appendleft(TEMPERATURE)
+        HUMIDITIES.appendleft(HUMIDITY)
+        TMP_TEMPERATURE = TEMPERATURE
+        TMP_HUMIDITY = HUMIDITY
 
-        if len(temperatures) > 5:
-            temperatures.pop()
-            tmp_temperatures = list(temperatures)
-
-            # Remove min/max values
-            tmp_temperatures.remove(max(tmp_temperatures))
-            tmp_temperatures.remove(min(tmp_temperatures))
-
-            # Report the average
-            tmp_temperature = sum(tmp_temperatures)/len(tmp_temperatures)
-
-        if len(humidities) > 5:
-            humidities.pop()
-            tmp_humidities = list(humidities)
+        if len(TEMPERATURES) > 5:
+            TEMPERATURES.pop()
+            TMP_TEMPERATURES = list(TEMPERATURES)
 
             # Remove min/max values
-            tmp_humidities.remove(max(tmp_humidities))
-            tmp_humidities.remove(min(tmp_humidities))
+            TMP_TEMPERATURES.remove(max(TMP_TEMPERATURES))
+            TMP_TEMPERATURES.remove(min(TMP_TEMPERATURES))
 
             # Report the average
-            tmp_humidity = sum(tmp_humidities)/len(tmp_humidities)
+            TMP_TEMPERATURE = sum(TMP_TEMPERATURES)/len(TMP_TEMPERATURES)
 
-        temperature_gauge.set(tmp_temperature)
-        humidity_gauge.set(tmp_humidity)
+        if len(HUMIDITIES) > 5:
+            HUMIDITIES.pop()
+            TMP_HUMIDITIES = list(HUMIDITIES)
+
+            # Remove min/max values
+            TMP_HUMIDITIES.remove(max(TMP_HUMIDITIES))
+            TMP_HUMIDITIES.remove(min(TMP_HUMIDITIES))
+
+            # Report the average
+            TMP_HUMIDITY = sum(TMP_HUMIDITIES)/len(TMP_HUMIDITIES)
+
+        TEMPERATURE_GAUGE.set(TMP_TEMPERATURE)
+        HUMIDITY_GAUGE.set(TMP_HUMIDITY)
 
         time.sleep(int(TIME_BETWEEN_READINGS))

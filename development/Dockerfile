@@ -1,6 +1,6 @@
 # base-image for python on any machine using a template variable,
 # see more about dockerfile templates here: https://www.balena.io/docs/learn/develop/dockerfile/
-FROM balenalib/%%BALENA_MACHINE_NAME%%-python:3.7-stretch-run
+FROM balenalib/raspberrypi3-python:3.7-stretch-run
 
 # use `install_packages` if you need to install dependencies,
 # for instance if you need git, just uncomment the line below.
@@ -9,14 +9,15 @@ RUN install_packages build-essential python-dev python-openssl git
 ENV PYTHONUNBUFFERED 1
 
 COPY ./requirements.txt /code/requirements.txt
+COPY ./dev.txt /code/dev.txt
 RUN pip install -Ur /code/requirements.txt
-
+RUN pip install -Ur /code/dev.txt
 COPY . /code/
 WORKDIR /code/
 
 RUN git clone https://github.com/ACMILabs/Adafruit_Python_DHT.git
 WORKDIR /code/Adafruit_Python_DHT/
-RUN python setup.py --force-pi2 install
+RUN python setup.py install --force-pi2
 WORKDIR /code/
 
 # pi.sh will run when container starts up on the device
