@@ -33,7 +33,7 @@ if __name__ == '__main__':
             MESSAGE = TEMPLATE.format(type(exception).__name__, exception.args)
             print(MESSAGE)
 
-            # Set default values for tests/failed reads
+            # Set default values for tests/failed reads.
             HUMIDITY = 1
             TEMPERATURE = 1
 
