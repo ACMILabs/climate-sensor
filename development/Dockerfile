@@ -15,7 +15,7 @@ RUN pip install -Ur /code/dev.txt
 COPY . /code/
 WORKDIR /code/
 
-RUN git clone https://github.com/adafruit/Adafruit_Python_DHT.git
+RUN git clone https://github.com/ACMILabs/Adafruit_Python_DHT.git
 WORKDIR /code/Adafruit_Python_DHT/
 RUN python setup.py install --force-pi2
 WORKDIR /code/
