@@ -19,7 +19,7 @@ def datetime_now():
 
 
 SENSOR = Adafruit_DHT.DHT22
-PIN = 4
+PIN = int(os.getenv('SENSOR_PIN', '4'))
 TEMPERATURE_GAUGE = Gauge('ambient_temperature', 'Ambient temperature')
 HUMIDITY_GAUGE = Gauge('ambient_humidity', 'Ambient humidity')
 
