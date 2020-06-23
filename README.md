@@ -16,7 +16,9 @@ A Raspberry Pi with a DFRobot DHT22 sensor to measure temperature and humidity a
 
 There's a [Prometheus](https://prometheus.io) [client](https://github.com/prometheus/client_python) in `read_sensors.py` that exports the climate data.
 
-We use a [Graphana](https://grafana.com) dashboard to view the data.
+We use a [Grafana](https://grafana.com) dashboard to view the data.
+
+![Climate Sensor data in Grafana](images/climate-sensors-grafana.png)
 
 ## Hardware
 
