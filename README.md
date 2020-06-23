@@ -40,6 +40,18 @@ With your Raspberry Pi pins on the right-hand side of the board, using the pin n
 
 ![Raspberry Pi Zero pinout](images/raspberry-pi-zero.png)
 
+## Installation on developer machine
+
+* Clone this repository.
+* `cd development`
+* `cp dev.tmpl.env dev.env`
+* Edit the `dev.env` with any required values (a default playlist will be used otherwise)
+* Build and run the development container `docker-compose up --build`
+
+## Testing and linting
+
+`docker exec -it climate make linttest`
+
 ## Deploying via Balena Cloud
 
 Clone this repo and make any edits to `read_sensors.py` that you need.
@@ -60,8 +72,29 @@ $ git push balena master
 
 Watch the devices update on the [Balena dashboard](https://dashboard.balena-cloud.com).
 
+## Deploying via Balena Cloud as a multi-container app
+
+To add a Climate Sensor to a multi-container Balena app:
+
+* Add this repository as a git submodule `git submodule add git@github.com:ACMILabs/climate-sensor.git climate`
+* Update your `docker-compose.yml` to include the `climate` app:
+
+```yaml
+version: '2'
+services:
+  climate:
+    build: ./climate
+    privileged: true
+    labels:
+      io.balena.features.supervisor-api: '1'
+    ports:
+      - "1006:1006"
+```
+
+If you'd like to update the `climate` submodule: `git submodule update --remote`
+
 ## Credits
 
 This project was built by the [ACMILabs](https://labs.acmi.net.au) team in 2019.
 
-[MIT License](LICENSE)
+[MPL License](LICENSE)
