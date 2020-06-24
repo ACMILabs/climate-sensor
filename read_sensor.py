@@ -6,7 +6,7 @@ import Adafruit_DHT
 from prometheus_client import Gauge, start_http_server
 
 DEBUG = os.getenv('DEBUG', 'false') == 'true'
-PIN = int(os.getenv('SENSOR_PIN', '4'))
+SENSOR_PIN = int(os.getenv('SENSOR_PIN', '4'))
 TIME_BETWEEN_READINGS = os.getenv('TIME_BETWEEN_READINGS')
 
 TEMPERATURES = deque()
@@ -62,7 +62,7 @@ if __name__ == '__main__':
     start_http_server(1006)
     while True:
         try:
-            HUMIDITY, TEMPERATURE = Adafruit_DHT.read_retry(SENSOR, PIN)
+            HUMIDITY, TEMPERATURE = Adafruit_DHT.read_retry(SENSOR, SENSOR_PIN)
             set_average_readings(TEMPERATURE, HUMIDITY)
         except (ImportError, RuntimeError) as exception:
             TEMPLATE = 'An exception of type {0} occurred. Arguments:\n{1!r}'
