@@ -47,7 +47,9 @@ With your Raspberry Pi pins on the right-hand side of the board, using the pin n
 * Clone this repository.
 * `cd development`
 * `cp dev.tmpl.env dev.env`
-* Edit the `dev.env` with any required values (a default playlist will be used otherwise)
+* Edit the `dev.env` to change the frequency of sensor readings, the default is every 5 seconds `TIME_BETWEEN_READINGS=5`
+* Set `DEBUG=true` to see errors on the console
+* Set `SENSOR_PIN=4` to change the Raspberry Pi pin you connect the sensor to. Default is 4
 * Build and run the development container `docker-compose up --build`
 
 ## Testing and linting

@@ -1,73 +1,73 @@
 import os
 import time
 from collections import deque
-from datetime import datetime
 
 import Adafruit_DHT
-import pytz
 from prometheus_client import Gauge, start_http_server
 
+DEBUG = os.getenv('DEBUG', 'false') == 'true'
+SENSOR_PIN = int(os.getenv('SENSOR_PIN', '4'))
 TIME_BETWEEN_READINGS = os.getenv('TIME_BETWEEN_READINGS')
-TIMEZONE = os.getenv('TIMEZONE', 'Australia/Melbourne')
+
 TEMPERATURES = deque()
 HUMIDITIES = deque()
-
-
-def datetime_now():
-    pytz_timezone = pytz.timezone(TIMEZONE)
-    return datetime.now(pytz_timezone).isoformat()
-
-
 SENSOR = Adafruit_DHT.DHT22
-PIN = int(os.getenv('SENSOR_PIN', '4'))
 TEMPERATURE_GAUGE = Gauge('ambient_temperature', 'Ambient temperature')
 HUMIDITY_GAUGE = Gauge('ambient_humidity', 'Ambient humidity')
+
+
+def set_average_readings(temperature, humidity):
+    """
+    Sets the temperature and humidity gauges with the average of the last 5 readings
+    when more than 5 readings have been made.
+    The function drops the minimum and maximum values, and averages the remaining.
+    """
+
+    if humidity < 0 or humidity > 100:
+        if DEBUG:
+            print(f'Ignoring bad reading: {temperature}°C, {humidity}%')
+    else:
+        TEMPERATURES.appendleft(temperature)
+        HUMIDITIES.appendleft(humidity)
+        average_temperature = temperature
+        average_humidity = humidity
+
+        if len(TEMPERATURES) > 5:
+            TEMPERATURES.pop()
+            tmp_temperatures = list(TEMPERATURES)
+
+            # Remove min/max values
+            tmp_temperatures.remove(max(tmp_temperatures))
+            tmp_temperatures.remove(min(tmp_temperatures))
+
+            # Get the average
+            average_temperature = sum(tmp_temperatures)/len(tmp_temperatures)
+
+        if len(HUMIDITIES) > 5:
+            HUMIDITIES.pop()
+            tmp_humidities = list(HUMIDITIES)
+
+            # Remove min/max values
+            tmp_humidities.remove(max(tmp_humidities))
+            tmp_humidities.remove(min(tmp_humidities))
+
+            # Get the average
+            average_humidity = sum(tmp_humidities)/len(tmp_humidities)
+
+        TEMPERATURE_GAUGE.set(average_temperature)
+        HUMIDITY_GAUGE.set(average_humidity)
+
 
 if __name__ == '__main__':
     start_http_server(1006)
     while True:
         try:
-            HUMIDITY, TEMPERATURE = Adafruit_DHT.read_retry(SENSOR, PIN)
+            HUMIDITY, TEMPERATURE = Adafruit_DHT.read_retry(SENSOR, SENSOR_PIN)
+            set_average_readings(TEMPERATURE, HUMIDITY)
         except (ImportError, RuntimeError) as exception:
             TEMPLATE = 'An exception of type {0} occurred. Arguments:\n{1!r}'
             MESSAGE = TEMPLATE.format(type(exception).__name__, exception.args)
-            print(MESSAGE)
-
-            # Set default values for tests/failed reads
-            HUMIDITY = 1
-            TEMPERATURE = 1
-
-        if HUMIDITY < 0 or HUMIDITY > 100:
-            continue
-
-        TEMPERATURES.appendleft(TEMPERATURE)
-        HUMIDITIES.appendleft(HUMIDITY)
-        TMP_TEMPERATURE = TEMPERATURE
-        TMP_HUMIDITY = HUMIDITY
-
-        if len(TEMPERATURES) > 5:
-            TEMPERATURES.pop()
-            TMP_TEMPERATURES = list(TEMPERATURES)
-
-            # Remove min/max values
-            TMP_TEMPERATURES.remove(max(TMP_TEMPERATURES))
-            TMP_TEMPERATURES.remove(min(TMP_TEMPERATURES))
-
-            # Report the average
-            TMP_TEMPERATURE = sum(TMP_TEMPERATURES)/len(TMP_TEMPERATURES)
-
-        if len(HUMIDITIES) > 5:
-            HUMIDITIES.pop()
-            TMP_HUMIDITIES = list(HUMIDITIES)
-
-            # Remove min/max values
-            TMP_HUMIDITIES.remove(max(TMP_HUMIDITIES))
-            TMP_HUMIDITIES.remove(min(TMP_HUMIDITIES))
-
-            # Report the average
-            TMP_HUMIDITY = sum(TMP_HUMIDITIES)/len(TMP_HUMIDITIES)
-
-        TEMPERATURE_GAUGE.set(TMP_TEMPERATURE)
-        HUMIDITY_GAUGE.set(TMP_HUMIDITY)
+            if DEBUG:
+                print(MESSAGE)
 
         time.sleep(int(TIME_BETWEEN_READINGS))
