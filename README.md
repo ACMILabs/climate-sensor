@@ -35,6 +35,8 @@ This Climate Sensor is designed to run with the following hardware:
 
 See the [case README](case) for more information about the 3D-printable sensor case.
 
+[![Climate Sensor case](case/sensor-case.jpg)](case)
+
 ## Wiring diagram
 
 With your Raspberry Pi pins on the right-hand side of the board, using the pin numbering system in the following diagram, attach the DHT22 cables to the Raspberry Pi pins in the table below:
