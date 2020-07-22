@@ -27,8 +27,13 @@ This Climate Sensor is designed to run with the following hardware:
 * [Raspberry Pi Zero W](https://www.raspberrypi.org/products/raspberry-pi-zero-w/)
 * [DFRobot DHT22 v2 sensor](https://www.dfrobot.com/product-1102.html)
 * [JST PH 3-Pin to Female Socket Cable](https://core-electronics.com.au/jst-ph-3-pin-to-female-socket-cable-200mm.html)
+* [3D-printed sensor case](case)
 
 **Note**: It will run on any model of Raspberry Pi, but for conservation of electricity and minimising heat production we recommend the Zero.
+
+### 3D-printed case
+
+See the [case README](case) for more information about the 3D-printable sensor case.
 
 ## Wiring diagram
 
