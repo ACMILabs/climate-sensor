@@ -76,3 +76,19 @@ def test_set_average_readings_with_bad_values():
     assert initial_humidities == read_sensor.HUMIDITIES
     assert humidity not in list(read_sensor.HUMIDITIES)
     assert initial_humidity_gauge == read_sensor.HUMIDITY_GAUGE.collect()[0].samples[0].value
+
+
+def test_set_average_readings_with_none():
+    """
+    Test that set_average_readings handles None values and doesn't try to store or set them.
+    """
+
+    reset_sensor()
+    temperature = None
+    humidity = None
+    read_sensor.set_average_readings(temperature, humidity)
+
+    assert read_sensor.TEMPERATURE_GAUGE.collect()[0].samples[0].value == 0
+    assert read_sensor.HUMIDITY_GAUGE.collect()[0].samples[0].value == 0
+    assert temperature not in list(read_sensor.TEMPERATURES)
+    assert humidity not in list(read_sensor.HUMIDITIES)
