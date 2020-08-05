@@ -23,39 +23,43 @@ def set_average_readings(temperature, humidity):
     The function drops the minimum and maximum values, and averages the remaining.
     """
 
-    if humidity < 0 or humidity > 100:
+    try:
+        if 0 <= humidity <= 100:
+            TEMPERATURES.appendleft(temperature)
+            HUMIDITIES.appendleft(humidity)
+            average_temperature = temperature
+            average_humidity = humidity
+
+            if len(TEMPERATURES) > 5:
+                TEMPERATURES.pop()
+                tmp_temperatures = list(TEMPERATURES)
+
+                # Remove min/max values
+                tmp_temperatures.remove(max(tmp_temperatures))
+                tmp_temperatures.remove(min(tmp_temperatures))
+
+                # Get the average
+                average_temperature = sum(tmp_temperatures)/len(tmp_temperatures)
+
+            if len(HUMIDITIES) > 5:
+                HUMIDITIES.pop()
+                tmp_humidities = list(HUMIDITIES)
+
+                # Remove min/max values
+                tmp_humidities.remove(max(tmp_humidities))
+                tmp_humidities.remove(min(tmp_humidities))
+
+                # Get the average
+                average_humidity = sum(tmp_humidities)/len(tmp_humidities)
+
+            TEMPERATURE_GAUGE.set(average_temperature)
+            HUMIDITY_GAUGE.set(average_humidity)
+        else:
+            if DEBUG:
+                print(f'Ignoring reading outside expected range: {temperature}°C, {humidity}%')
+    except TypeError:
         if DEBUG:
             print(f'Ignoring bad reading: {temperature}°C, {humidity}%')
-    else:
-        TEMPERATURES.appendleft(temperature)
-        HUMIDITIES.appendleft(humidity)
-        average_temperature = temperature
-        average_humidity = humidity
-
-        if len(TEMPERATURES) > 5:
-            TEMPERATURES.pop()
-            tmp_temperatures = list(TEMPERATURES)
-
-            # Remove min/max values
-            tmp_temperatures.remove(max(tmp_temperatures))
-            tmp_temperatures.remove(min(tmp_temperatures))
-
-            # Get the average
-            average_temperature = sum(tmp_temperatures)/len(tmp_temperatures)
-
-        if len(HUMIDITIES) > 5:
-            HUMIDITIES.pop()
-            tmp_humidities = list(HUMIDITIES)
-
-            # Remove min/max values
-            tmp_humidities.remove(max(tmp_humidities))
-            tmp_humidities.remove(min(tmp_humidities))
-
-            # Get the average
-            average_humidity = sum(tmp_humidities)/len(tmp_humidities)
-
-        TEMPERATURE_GAUGE.set(average_temperature)
-        HUMIDITY_GAUGE.set(average_humidity)
 
 
 if __name__ == '__main__':
