@@ -39,6 +39,11 @@ def test_set_average_readings():
     assert temperature in list(read_sensor.TEMPERATURES)
     assert humidity in list(read_sensor.HUMIDITIES)
 
+    # Test with set_average set to False
+    read_sensor.set_average_readings(temperature, humidity, set_average=False)
+    assert read_sensor.TEMPERATURE_GAUGE.collect()[0].samples[0].value == 21.5
+    assert read_sensor.HUMIDITY_GAUGE.collect()[0].samples[0].value == 54
+
 
 def test_set_average_readings_with_first_reading():
     """
