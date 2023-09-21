@@ -11,6 +11,6 @@ jobs:
     - uses: actions/checkout@main
     - name: Build Python lint and test
       run: |
-        cd development && docker-compose up --build -d
+        cp dev.tmpl.env dev.env && cd development && docker-compose up --build -d
     - name: Run Python lint and test
       run: docker exec climate make linttest
