@@ -20,7 +20,7 @@ jobs:
       - name: Build Docker image for arm using buildx
         run: |
           docker buildx create --use
-          cd development && docker buildx build --platform linux/arm/v7 -t climate:latest .
+          docker buildx build --platform linux/arm/v7 -t climate:latest -f development/Dockerfile .
 
       - name: Start climate services
         run: |
