@@ -3,6 +3,8 @@ Climate Sensor
 
 A Raspberry Pi with a DFRobot DHT22 sensor to measure temperature and humidity and export that data to a monitoring and graphing server.
 
+![Climate Sensor CI](https://github.com/ACMILabs/climate-sensor/workflows/Climate%20Sensor%20CI/badge.svg)
+
 ## Features
 
 * Measures Temperature in Celcius °C

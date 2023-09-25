@@ -1,0 +1,22 @@
+name: Climate Sensor CI
+
+on: [push]
+
+jobs:
+  build-and-test-python:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@main
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@master
+
+      - name: Start climate services
+        run: |
+          cp dev.tmpl.env dev.env && cd development && docker-compose up -d
+
+      - name: Run Python lint and test
+        run: docker exec climate make linttest
